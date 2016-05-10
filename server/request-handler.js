@@ -1,17 +1,3 @@
-/*************************************************************
-
-You should implement your request handler function in this file.
-
-requestHandler is already getting passed to http.createServer()
-in basic-server.js, but it won't work as is.
-
-You'll have to figure out a way to export this function from
-this file and include it in basic-server.js so that it actually works.
-
-*Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
-
-**************************************************************/
-
 var data = {
   results: []
 };
@@ -22,9 +8,11 @@ var data = {
 //reset results array every time it's sent successfully
 
 var requestHandler = function(request, response) {
-  console.log(request);
+  var uri = url.parse(request.url).pathname  
+
   if (request.method === 'GET') {
-    // data.results.push(request._postData); 
+    
+    console.log('response is ', response);
     var statusCode = 200;
 
     var headers = defaultCorsHeaders;
@@ -34,6 +22,14 @@ var requestHandler = function(request, response) {
     var finalPackage = JSON.stringify(data);
 
     response.end(finalPackage);
+
+    // response.on('error', function () {
+    //   var statusCode = 404;
+    //   var headers = defaultCorsHeaders;
+    //   headers['Content-Type'] = 'text/plain';
+    //   response.writeHead(statusCode, header);
+    //   response.end();
+    // });
 
   } else if (request.method === 'POST') {
     var requestString = '';
@@ -54,6 +50,7 @@ var requestHandler = function(request, response) {
       response.end(JSON.stringify(final));
     });    
   }
+  
 };
 
 //url is different for rooms
@@ -66,4 +63,3 @@ var defaultCorsHeaders = {
 };
 
 exports.requestHandler = requestHandler;
-
