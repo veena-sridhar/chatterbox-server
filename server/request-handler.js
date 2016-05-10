@@ -7,12 +7,18 @@ var data = {
 //and make the response be the results array
 //reset results array every time it's sent successfully
 
-var requestHandler = function(request, response) {
-  var uri = url.parse(request.url).pathname  
+var requestHandler = function(request, response) { 
+
+  if (request.url !== '/classes/messages') {
+    var statusCode = 404;
+    var headers = defaultCorsHeaders;
+    headers['Content-Type'] = 'text/plain';
+    response.writeHead(statusCode, headers);
+    console.log(response);
+    response.end();
+  }
 
   if (request.method === 'GET') {
-    
-    console.log('response is ', response);
     var statusCode = 200;
 
     var headers = defaultCorsHeaders;
@@ -23,15 +29,9 @@ var requestHandler = function(request, response) {
 
     response.end(finalPackage);
 
-    // response.on('error', function () {
-    //   var statusCode = 404;
-    //   var headers = defaultCorsHeaders;
-    //   headers['Content-Type'] = 'text/plain';
-    //   response.writeHead(statusCode, header);
-    //   response.end();
-    // });
+  }
 
-  } else if (request.method === 'POST') {
+  if (request.method === 'POST') {
     var requestString = '';
 
     request.on('data', function(chunks) {
@@ -49,7 +49,7 @@ var requestHandler = function(request, response) {
       response.writeHead(statusCode, headers);
       response.end(JSON.stringify(final));
     });    
-  }
+  } 
   
 };
 
